@@ -7,7 +7,6 @@ class AuthService {
   final storage = FlutterSecureStorage();
 
   Future<void> login(String email, String password) async {
-    print('response.statusCode');
     final response = await http.post(
       Uri.parse('$apiUrl/login'),
       body: {
