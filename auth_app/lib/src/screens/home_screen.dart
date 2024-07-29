@@ -1,14 +1,47 @@
+import 'dart:convert';
+
+import 'package:auth_app/src/services/api.dart';
 import 'package:auth_app/src/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final _authService = AuthService();
+  final storage = FlutterSecureStorage();
+  String userName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  Future<void> getUserData() async {
+    final result = await API(context: context).sendRequest(route: '/me', method: 'get');
+    if (result.statusCode == 200) {
+      final response = jsonDecode(result.body);
+      print(response['name']);
+      if (response['status'] == 'success') {
+        setState(() {
+          userName = response['name'];
+        });
+      }
+    } else {
+      print('Failed to load user data');
+    }
+  }
 
   void logout(BuildContext context) async {
     try {
       await _authService.logout();
-      Navigator.of(context).pushReplacementNamed('/login');
+      Navigator.pushReplacementNamed(context, '/login');
     } catch (e) {
       print(e);
     }
@@ -22,7 +55,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Welcome to the Home Screen!'),
+            Text('Welcome $userName'),
             ElevatedButton(
               onPressed: () {
                 logout(context);
