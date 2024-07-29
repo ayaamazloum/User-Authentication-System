@@ -38,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Handle user logout
   void logout(BuildContext context) async {
     try {
       await _authService.logout();
