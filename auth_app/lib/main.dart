@@ -26,6 +26,7 @@ class _AuthAppState extends State<AuthApp> {
     checkAuth();
   }
 
+  // Check if the user is authenticated by checking the stored token
   void checkAuth() async {
     final token = await storage.read(key: 'token');
     if (token != null && token.isNotEmpty) {
@@ -37,6 +38,7 @@ class _AuthAppState extends State<AuthApp> {
     }
   }
 
+  // Validate the user by calling the backend to verify the token
   void validateUser() async {
     bool isValidUser = await _authService.validateUser();
 

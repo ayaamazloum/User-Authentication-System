@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 class AuthService {
   final storage = FlutterSecureStorage();
 
+  // Login user and store the token
   Future<void> login(String email, String password) async {
     final response = await http.post(
       Uri.parse('$apiUrl/login'),
@@ -24,6 +25,7 @@ class AuthService {
     }
   }
 
+  // Logout user and delete the token
   Future<void> logout() async {
     final token = await storage.read(key: 'token');
     final response = await http.get(
@@ -40,6 +42,7 @@ class AuthService {
     }
   }
 
+  // Validate user by checking the token
   Future<bool> validateUser() async {
     final token = await storage.read(key: 'token');
     final response = await http.get(
