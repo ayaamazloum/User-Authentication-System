@@ -34,7 +34,7 @@ class API {
         });
       }
 
-      // Handle edge cases on each and every api request: If the token is invalid or expired, redirect to the login page
+      // Handle edge cases: If the token is invalid or expired, redirect to the login page
       if (response.statusCode == 401) {
         storage.delete(key: 'token');
         Navigator.pushReplacementNamed(context, '/login');

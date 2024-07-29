@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:auth_app/src/services/api.dart';
+import 'package:auth_app/src/services/api_service.dart';
 import 'package:auth_app/src/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -23,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     getUserData();
   }
 
+  // Fetch user data from the backend to showcase the validation of the token at each and every api request (edge cases)
   Future<void> getUserData() async {
     final result = await API(context: context).sendRequest(route: '/me', method: 'get');
     if (result.statusCode == 200) {
@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // Handle user logout
   void logout(BuildContext context) async {
     try {
       await _authService.logout();
