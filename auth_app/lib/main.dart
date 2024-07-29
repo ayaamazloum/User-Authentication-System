@@ -1,5 +1,6 @@
 import 'package:auth_app/src/screens/home_screen.dart';
 import 'package:auth_app/src/screens/login_screen.dart';
+import 'package:auth_app/src/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -17,8 +18,9 @@ class AuthApp extends StatefulWidget {
 class _AuthAppState extends State<AuthApp> {
   bool _isAuth = false;
   final storage = FlutterSecureStorage();
+  final _authService = AuthService();
 
-    @override
+  @override
   void initState() {
     super.initState();
     checkAuth();
@@ -26,8 +28,20 @@ class _AuthAppState extends State<AuthApp> {
 
   void checkAuth() async {
     final token = await storage.read(key: 'token');
+    if (token != null && token.isNotEmpty) {
+      validateUser();
+    } else {
+      setState(() {
+        _isAuth = false;
+      });
+    }
+  }
+
+  void validateUser() async {
+    bool isValidUser = await _authService.validateUser();
+
     setState(() {
-      _isAuth = token != null && token.isNotEmpty ? true : false;
+      _isAuth = isValidUser;
     });
   }
 

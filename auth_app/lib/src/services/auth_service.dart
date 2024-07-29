@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'package:auth_app/src/utils/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String apiUrl = 'http://192.168.0.115:8000/api';
   final storage = FlutterSecureStorage();
 
   Future<void> login(String email, String password) async {
@@ -19,7 +19,8 @@ class AuthService {
       var data = jsonDecode(response.body);
       await storage.write(key: 'token', value: data['token']);
     } else {
-      throw Exception('Failed to login');
+      var errorData = jsonDecode(response.body);
+      throw Exception(errorData['error'] ?? 'Failed to login');
     }
   }
 
@@ -37,5 +38,17 @@ class AuthService {
     } else {
       throw Exception('Failed to logout: ${response.body}');
     }
+  }
+
+  Future<bool> validateUser() async {
+    final token = await storage.read(key: 'token');
+    final response = await http.get(
+      Uri.parse('$apiUrl/me'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    return response.statusCode == 200;
   }
 }
