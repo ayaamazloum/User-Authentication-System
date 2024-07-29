@@ -25,7 +25,7 @@ class AuthService {
 
   Future<void> logout() async {
     final token = await storage.read(key: 'token');
-    final response = await http.post(
+    final response = await http.get(
       Uri.parse('$apiUrl/logout'),
       headers: {
         'Authorization': 'Bearer $token',
@@ -35,7 +35,7 @@ class AuthService {
     if (response.statusCode == 200) {
       await storage.delete(key: 'token');
     } else {
-      throw Exception('Failed to logout');
+      throw Exception('Failed to logout: ${response.body}');
     }
   }
 }
