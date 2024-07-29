@@ -23,10 +23,12 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailController.text,
         _passwordController.text,
       );
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
-      // TODO: Handle login error
-      print(e);
+      // Display error message using a Snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
     }
   }
 
@@ -55,8 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(
-                    labelText: 'Password', hintText: '********'),
+                decoration: InputDecoration(labelText: 'Password', hintText: '********'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your password';
